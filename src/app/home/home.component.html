@@ -1,0 +1,11 @@
+<div class="container d-flex flex-column justify-content-center align-items-center">
+  <h2 class="my-5">Gerador de letra @omovimentum</h2>
+
+  <textarea #myTextarea class="form-control mb-3" [(ngModel)]="lyrics"></textarea>
+
+  <div class="d-flex">
+    <button type="button" class="btn btn-primary me-1" (click)="goToBlueTheme()">Azul</button>
+    <button type="button" class="btn btn-danger me-1" (click)="goToPinkTheme()">Rosa</button>
+    <button type="button" class="btn btn-dark" (click)="goToDarkTheme()">Preto</button>
+  </div>
+</div>
