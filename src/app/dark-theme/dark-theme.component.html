@@ -1,8 +1,0 @@
-<main>
-  <button id="fullScreen" (click)="toggleFullScreen()">[  ]</button>
-  <button id="back" routerLink="/"><</button>
-  <img [hidden]="!showLogo" id="logo" src="assets/images/logo-branco.png" />
-  <div *ngIf="showTitle" id="title" class="lyric">{{ lyrics[index] | uppercase }}</div>
-  <div *ngIf="showContent" class="lyric">{{ lyrics[index] | uppercase }}</div>
-  <p>{{ index+1 }} / {{ lyrics.length+1 }}</p>
-</main>

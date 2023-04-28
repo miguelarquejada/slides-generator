@@ -1,11 +1,31 @@
-<div class="container d-flex flex-column justify-content-center align-items-center">
-  <h2 class="my-5">Gerador de letra @omovimentum</h2>
+<div class="container">
 
-  <textarea #myTextarea class="form-control mb-3" [(ngModel)]="lyrics"></textarea>
+  <div class="row">
+    <div class="col-4">
+      <div class="mt-5">
+        <input [(ngModel)]="songName" class="form-control me-2" type="search" placeholder="Música...">
+      </div>
 
-  <div class="d-flex">
-    <button type="button" class="btn btn-primary me-1" (click)="goToBlueTheme()">Azul</button>
-    <button type="button" class="btn btn-danger me-1" (click)="goToPinkTheme()">Rosa</button>
-    <button type="button" class="btn btn-dark" (click)="goToDarkTheme()">Preto</button>
+      <div class="list-group mt-3">
+        <div *ngFor="let song of filteredSongs" class="d-flex mb-1 w-100">
+          <a (click)="replace(song)" style="cursor: pointer;" class="list-group-item list-group-item-action me-2">{{ song.Title }}</a>
+          <button (click)="delete(song)" class="btn btn-sm btn-danger">excluir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-8 d-flex flex-column align-items-center">
+      <h2 class="my-5">Gerador de letra @omovimentum</h2>
+
+      <input [(ngModel)]="title" class="form-control mb-2 input-500" type="text" placeholder="Título...">
+      <textarea #myTextarea class="form-control mb-3" [(ngModel)]="lyrics" placeholder="Letra..."></textarea>
+
+      <div class="d-flex">
+        <button type="button" class="btn btn-primary me-1" (click)="goToTheme(0)">Azul</button>
+        <button type="button" class="btn btn-danger me-1" (click)="goToTheme(1)">Rosa</button>
+        <button type="button" class="btn btn-dark me-1" (click)="goToTheme(2)">Preto</button>
+        <button type="button" class="btn btn-success" (click)="save()">Salvar</button>
+      </div>
+    </div>
   </div>
 </div>

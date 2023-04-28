@@ -1,4 +1,4 @@
-<main>
+<main [ngStyle]="{ 'background-image': 'url(assets/images/' + currentTheme + ')' }" class="main-style">
   <button id="fullScreen" (click)="toggleFullScreen()">[  ]</button>
   <button id="back" routerLink="/"><</button>
   <img [hidden]="!showLogo" id="logo" src="assets/images/logo-branco.png" />

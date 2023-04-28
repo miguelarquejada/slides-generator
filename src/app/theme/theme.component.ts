@@ -1,13 +1,14 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
-import { LyricService } from '../lyric.service';
-import { Router } from '@angular/router';
+import { LyricService } from '../services/lyric.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dark-theme',
-  templateUrl: './dark-theme.component.html',
-  styleUrls: ['./dark-theme.component.css']
+  selector: 'app-theme',
+  templateUrl: './theme.component.html',
+  styleUrls: ['./theme.component.css']
 })
-export class DarkThemeComponent implements OnInit {
+export class ThemeComponent implements OnInit {
 
   lyrics: string[] = [];
   index: number = 0;
@@ -18,10 +19,16 @@ export class DarkThemeComponent implements OnInit {
 
   isFullScreen: boolean = false;
 
-  constructor(private lyricService: LyricService, private router: Router) {}
+  themes = ['fundo-azul.png', 'fundo-rosa.png', 'fundo-preto.png']
+  currentTheme: string = this.themes[0];
+
+  constructor(private lyricService: LyricService, private router: Router, private route: ActivatedRoute) {
+    let themeParameter = Number(this.route.snapshot.paramMap.get('theme')) ?? 0;
+    this.currentTheme = this.themes[themeParameter];
+  }
 
   ngOnInit() {
-    this.lyrics = this.lyricService.getData()
+    this.lyrics = this.lyricService.getData();
   }
 
   @HostListener('document:keydown', ['$event'])
