@@ -4,6 +4,7 @@ import { LyricService } from '../services/lyric.service';
 import { LyricsStoreService } from '../services/lyrics-store.service';
 import { Song } from '../models/songs';
 import { ToastrService } from 'ngx-toastr';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +24,8 @@ export class HomeComponent implements AfterViewInit {
   songsIsLoading: boolean = true;
   songIsSaving: boolean = false;
 
+  theme: string = 'blue';
+
   @ViewChild('myTextarea') myTextarea!: ElementRef;
 
   ngAfterViewInit() {
@@ -35,10 +38,6 @@ export class HomeComponent implements AfterViewInit {
 
   get filteredSongs() {
     return this.songs.filter(x => x.Title.toUpperCase().includes(this.songName.toUpperCase()))
-  }
-
-  showSuccess() {
-    // this.toastr.success('Hello world!', 'Toastr fun!');
   }
 
   getSongs() {
@@ -58,27 +57,31 @@ export class HomeComponent implements AfterViewInit {
     this.songsIsLoading = true;
     await this.lyricsStoreService.deleteSong(song);
     this.getSongs();
+    this.deleteSuccess();
   }
 
   async save() {
-    if(this.isEmpty())
+    if(this.isEmpty()) {
+      this.songIsEmptyMessage();
       return;
+    }
 
     this.songIsSaving = true;
     let song = new Song(this.title, this.lyrics);
     await this.lyricsStoreService.addSong(song);
     this.getSongs();
     this.songIsSaving = false;
+    this.saveSuccess();
   }
 
-  goToTheme(theme: number) {
-    this.lyricService.setData(this.lyrics, this.title)
-    if(!this.lyrics) {
-      alert('Escreva algo para prosseguir')
-      return
+  goToTheme() {
+    if(this.isEmpty()) {
+      this.songIsEmptyMessage();
+      return;
     }
 
-    this.router.navigate(['theme', theme]);
+    this.lyricService.setData(this.lyrics, this.title)
+    this.router.navigate(['theme', this.theme]);
   }
 
   clean() {
@@ -90,27 +93,55 @@ export class HomeComponent implements AfterViewInit {
     return !this.title || !this.lyrics;
   }
 
-  @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (event.keyCode === 49) {
-      this.goToTheme(0)
-    }
-
-    if (event.keyCode === 50) {
-      this.goToTheme(1)
-    }
-
-    if (event.keyCode === 51) {
-      this.goToTheme(2)
-    }
-
-    if (event.keyCode === 13) {
-      this.myTextarea.nativeElement.focus();
-    }
-
-    if (event.keyCode === 27) {
-      this.myTextarea.nativeElement.blur();
-    }
+  saveSuccess() {
+    this.toastr.success('A música foi salva com sucesso', 'Sucesso', {
+      closeButton: true
+    });
   }
 
+  deleteSuccess() {
+    this.toastr.success('A música foi removida com sucesso', 'Sucesso', {
+      closeButton: true
+    });
+  }
+
+  songIsEmptyMessage() {
+    this.toastr.info('Preencha todos os campos', 'Falha ao salvar música', {
+      closeButton: true
+    });
+  }
+
+  captureScreen()
+  {
+    // var pageWidth = 1920;
+    // var pageHeight = 1080;
+
+    // let pdf = new jsPDF({
+    //   orientation: "landscape",
+    //   unit: "px",
+    //   format: [1920, 1080]
+    // });
+
+    // pdf.addFont("assets/fonts/RussoOne-Regular.ttf", "RussoOne", "normal");
+    // pdf.setFont("RussoOne");
+
+    // var fontSize = 100;
+    // pdf.setFontSize(fontSize);
+    // pdf.setTextColor(255,255,255)
+
+    // pdf.addImage('assets/images/fundo-azul.png', 'PNG', 0, 0, pageWidth, pageHeight);
+
+    // var text = "TEXTO PARA CENTRALIZAR";
+    // var maxWidth = 1000;
+    // var lineHeight = pdf.getLineHeight() / pdf.internal.scaleFactor;
+    // var lines = pdf.splitTextToSize(text, maxWidth);
+    // var textHeight = lines.length * lineHeight;
+    // var textWidth = pdf.getTextWidth(lines[0]);
+    // var textX = (pageWidth - textWidth) / 2;
+    // var textY = (pageHeight - textHeight) / 2;
+
+    // pdf.text(lines, textX, textY + lineHeight, { align: "center" });
+
+    // pdf.save('letra.pdf');
+  }
 }

@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { LyricService } from '../services/lyric.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-theme',
@@ -23,8 +24,21 @@ export class ThemeComponent implements OnInit {
   currentTheme: string = this.themes[0];
 
   constructor(private lyricService: LyricService, private router: Router, private route: ActivatedRoute) {
-    let themeParameter = Number(this.route.snapshot.paramMap.get('theme')) ?? 0;
-    this.currentTheme = this.themes[themeParameter];
+    let themeParameter =this.route.snapshot.paramMap.get('theme') ?? 'blue';
+
+    switch (themeParameter) {
+      case 'blue':
+        this.currentTheme = this.themes[0];
+        break;
+      case 'pink':
+        this.currentTheme = this.themes[1];
+        break;
+      case 'dark':
+        this.currentTheme = this.themes[2];
+        break;
+      default:
+        break;
+    }
   }
 
   ngOnInit() {

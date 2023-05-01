@@ -1,6 +1,6 @@
-<main [ngStyle]="{ 'background-image': 'url(assets/images/' + currentTheme + ')' }" class="main-style">
-  <button id="fullScreen" (click)="toggleFullScreen()">[  ]</button>
-  <button id="back" routerLink="/"><</button>
+<main id="main" [ngStyle]="{ 'background-image': 'url(assets/images/' + currentTheme + ')' }" class="main-style">
+  <i id="fullScreen" (click)="toggleFullScreen()" class="bi bi-arrows-fullscreen"></i>
+  <i id="back" routerLink="/" class="bi bi-arrow-left-circle-fill text-light"></i>
   <img [hidden]="!showLogo" id="logo" src="assets/images/logo-branco.png" />
   <div *ngIf="showTitle" id="title" class="lyric">{{ lyrics[index] | uppercase }}</div>
   <div *ngIf="showContent" class="lyric">{{ lyrics[index] | uppercase }}</div>

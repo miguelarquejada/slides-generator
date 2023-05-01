@@ -1,7 +1,10 @@
-<nav class="navbar bg-dark mb-5" data-bs-theme="dark">
+<nav class="navbar bg-dark mb-5 py-3" data-bs-theme="dark">
   <div>
-    <img class="ms-4 me-2" src="assets/images/logo-branco.png" height="30">
-    <span class="navbar-brand text-light mb-0">Gerador de letras @omovimentum</span>
+    <img class="ms-4 me-3" src="assets/images/logo-branco.png" height="30">
+    <span class="navbar-brand text-light align-middle mb-0">Gerador de letras</span>
+  </div>
+  <div class="me-4">
+    <span class="text-light">@omovimentum </span>
   </div>
 </nav>
 
@@ -30,12 +33,20 @@
 
     <div id="generator-area" class="col-12 col-md-6 d-flex flex-column align-items-center rounded">
       <div class="w-100">
-        <label class="form-label">Título da música <i data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Tooltip on right" class="bi bi-info-circle-fill"></i></label>
+        <label class="form-label">Título da música <i class="bi bi-info-circle-fill" tippy [tippyOptions]="{
+          arrow: true,
+          createPopperInstanceOnInit: true,
+          content: 'Será exibido no primeiro slide'
+        }"></i></label>
         <input [(ngModel)]="title" class="form-control mb-2" type="text" placeholder="Título...">
       </div>
 
       <div class="w-100">
-        <label class="form-label">Letra da música <i data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Tooltip on right" class="bi bi-info-circle-fill"></i></label>
+        <label class="form-label">Letra da música <i tippy [tippyOptions]="{
+          arrow: true,
+          createPopperInstanceOnInit: true,
+          content: 'Cada linha será referente a um slide'
+        }" class="bi bi-info-circle-fill"></i></label>
         <textarea #myTextarea class="form-control mb-3" [(ngModel)]="lyrics" placeholder="Letra..."></textarea>
       </div>
 
@@ -45,31 +56,27 @@
         </div>
         <div *ngIf="!songIsSaving">
           <div class="btn-group me-1" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="btnradio" id="blue" autocomplete="off" checked>
+            <input [(ngModel)]="theme" value="blue" type="radio" class="btn-check" name="btnradio" id="blue" autocomplete="off" checked>
             <label class="btn btn-outline-dark" for="blue">Tema Azul</label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="pink" autocomplete="off">
+            <input [(ngModel)]="theme" value="pink" type="radio" class="btn-check" name="btnradio" id="pink" autocomplete="off">
             <label class="btn btn-outline-dark" for="pink">Tema Rosa</label>
 
-            <input type="radio" class="btn-check" name="btnradio" id="black" autocomplete="off">
+            <input [(ngModel)]="theme" value="dark" type="radio" class="btn-check" name="btnradio" id="black" autocomplete="off">
             <label class="btn btn-outline-dark" for="black">Tema Preto</label>
           </div>
           <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" class="btn-check" name="aspectRadio" id="full" autocomplete="off" checked>
+            <input type="radio" class="btn-check" name="aspectRadio" id="full" autocomplete="off" checked disabled>
             <label class="btn btn-outline-secondary" for="full">16:9</label>
 
-            <input type="radio" class="btn-check" name="aspectRadio" id="square" autocomplete="off">
+            <input type="radio" class="btn-check" name="aspectRadio" id="square" autocomplete="off" disabled>
             <label class="btn btn-outline-secondary" for="square">4:3</label>
           </div>
           <br>
 
-          <!-- <button type="button" class="btn btn-primary me-1" (click)="goToTheme(0)">Tema Azul</button>
-          <button type="button" class="btn btn-danger me-1" (click)="goToTheme(1)">Tema Rosa</button>
-          <button type="button" class="btn btn-dark me-1" (click)="goToTheme(2)">Tema Preto</button> <br> -->
-
-          <button type="button" class="btn btn-sm btn-outline-danger mt-4 me-1" disabled><i class="bi bi-filetype-pdf"></i> Download PDF</button>
-          <button type="button" class="btn btn-sm btn-outline-warning mt-4 me-1" disabled><i class="bi bi-filetype-ppt"></i> Download PPT</button>
-          <button type="button" class="btn btn-sm btn-outline-primary mt-4 me-1"><i class="bi bi-globe"></i> Visualizar Online</button> <br>
+          <button (click)="captureScreen()" type="button" class="btn btn-sm btn-outline-danger mt-4 me-1" disabled><i  class="bi bi-filetype-pdf"></i> Download PDF (em breve)</button>
+          <button type="button" class="btn btn-sm btn-outline-warning mt-4 me-1" disabled><i class="bi bi-filetype-ppt"></i> Download PPT (em breve)</button>
+          <button (click)="goToTheme()" type="button" class="btn btn-sm btn-outline-primary mt-4 me-1"><i class="bi bi-globe"></i> Visualizar Online</button> <br>
 
           <button type="button" class="btn btn-sm btn-outline-secondary mt-4 me-1" (click)="clean()"><i class="bi bi-backspace"></i> Limpar</button>
           <button type="button" class="btn btn-sm btn-outline-success mt-4" (click)="save()"><i class="bi bi-clipboard-check"></i> Salvar/Atualizar</button>
@@ -78,31 +85,4 @@
     </div>
 
   </div>
-
-  <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        Hello, world! This is a toast message.
-      </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  </div>
-
 </div>
-<!--
-<script>
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl)
-  })
-
-  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl)
-  })
-
-  var toastEl = toast();
-  document.body.appendChild(toastEl)
-  const myToast = new Toast(toastEl);
-  myToast.show();
-</script> -->
