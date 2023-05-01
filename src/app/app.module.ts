@@ -8,6 +8,8 @@ import { ThemeComponent } from './theme/theme.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +20,8 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     FormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

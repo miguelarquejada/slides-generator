@@ -1,31 +1,108 @@
-<div class="container">
+<nav class="navbar bg-dark mb-5" data-bs-theme="dark">
+  <div>
+    <img class="ms-4 me-2" src="assets/images/logo-branco.png" height="30">
+    <span class="navbar-brand text-light mb-0">Gerador de letras @omovimentum</span>
+  </div>
+</nav>
 
-  <div class="row">
-    <div class="col-4">
-      <div class="mt-5">
-        <input [(ngModel)]="songName" class="form-control me-2" type="search" placeholder="Música...">
+<div class="container-fluid">
+  <div class="row mx-2">
+    <div class="col-12 col-md-6">
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+        <input [(ngModel)]="songName" class="form-control me-2" type="search" placeholder="Pesquisar música salva...">
       </div>
 
-      <div class="list-group mt-3">
+      <div *ngIf="songsIsLoading" class="text-center my-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="!songsIsLoading" class="list-group mt-3">
+        <p class="text-secondary mt-2">Clique em uma música para carregá-la</p>
         <div *ngFor="let song of filteredSongs" class="d-flex mb-1 w-100">
-          <a (click)="replace(song)" style="cursor: pointer;" class="list-group-item list-group-item-action me-2">{{ song.Title }}</a>
-          <button (click)="delete(song)" class="btn btn-sm btn-danger">excluir</button>
+          <a (click)="replace(song)" style="cursor: pointer;" class="list-group-item list-group-item-action rounded me-2"><b>{{ song.Title }}</b></a>
+          <button (click)="delete(song)" class="btn btn-sm btn-outline-danger delete-button"><i class="bi bi-x-circle-fill"></i></button>
         </div>
       </div>
     </div>
 
-    <div class="col-8 d-flex flex-column align-items-center">
-      <h2 class="my-5">Gerador de letra @omovimentum</h2>
+    <div id="generator-area" class="col-12 col-md-6 d-flex flex-column align-items-center rounded">
+      <div class="w-100">
+        <label class="form-label">Título da música <i data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Tooltip on right" class="bi bi-info-circle-fill"></i></label>
+        <input [(ngModel)]="title" class="form-control mb-2" type="text" placeholder="Título...">
+      </div>
 
-      <input [(ngModel)]="title" class="form-control mb-2 input-500" type="text" placeholder="Título...">
-      <textarea #myTextarea class="form-control mb-3" [(ngModel)]="lyrics" placeholder="Letra..."></textarea>
+      <div class="w-100">
+        <label class="form-label">Letra da música <i data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Tooltip on right" class="bi bi-info-circle-fill"></i></label>
+        <textarea #myTextarea class="form-control mb-3" [(ngModel)]="lyrics" placeholder="Letra..."></textarea>
+      </div>
 
-      <div class="d-flex">
-        <button type="button" class="btn btn-primary me-1" (click)="goToTheme(0)">Azul</button>
-        <button type="button" class="btn btn-danger me-1" (click)="goToTheme(1)">Rosa</button>
-        <button type="button" class="btn btn-dark me-1" (click)="goToTheme(2)">Preto</button>
-        <button type="button" class="btn btn-success" (click)="save()">Salvar</button>
+      <div class="text-center">
+        <div *ngIf="songIsSaving" class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div *ngIf="!songIsSaving">
+          <div class="btn-group me-1" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="blue" autocomplete="off" checked>
+            <label class="btn btn-outline-dark" for="blue">Tema Azul</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="pink" autocomplete="off">
+            <label class="btn btn-outline-dark" for="pink">Tema Rosa</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="black" autocomplete="off">
+            <label class="btn btn-outline-dark" for="black">Tema Preto</label>
+          </div>
+          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="aspectRadio" id="full" autocomplete="off" checked>
+            <label class="btn btn-outline-secondary" for="full">16:9</label>
+
+            <input type="radio" class="btn-check" name="aspectRadio" id="square" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="square">4:3</label>
+          </div>
+          <br>
+
+          <!-- <button type="button" class="btn btn-primary me-1" (click)="goToTheme(0)">Tema Azul</button>
+          <button type="button" class="btn btn-danger me-1" (click)="goToTheme(1)">Tema Rosa</button>
+          <button type="button" class="btn btn-dark me-1" (click)="goToTheme(2)">Tema Preto</button> <br> -->
+
+          <button type="button" class="btn btn-sm btn-outline-danger mt-4 me-1" disabled><i class="bi bi-filetype-pdf"></i> Download PDF</button>
+          <button type="button" class="btn btn-sm btn-outline-warning mt-4 me-1" disabled><i class="bi bi-filetype-ppt"></i> Download PPT</button>
+          <button type="button" class="btn btn-sm btn-outline-primary mt-4 me-1"><i class="bi bi-globe"></i> Visualizar Online</button> <br>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary mt-4 me-1" (click)="clean()"><i class="bi bi-backspace"></i> Limpar</button>
+          <button type="button" class="btn btn-sm btn-outline-success mt-4" (click)="save()"><i class="bi bi-clipboard-check"></i> Salvar/Atualizar</button>
+        </div>
       </div>
     </div>
+
   </div>
+
+  <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        Hello, world! This is a toast message.
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+
 </div>
+<!--
+<script>
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+  })
+
+  var toastEl = toast();
+  document.body.appendChild(toastEl)
+  const myToast = new Toast(toastEl);
+  myToast.show();
+</script> -->

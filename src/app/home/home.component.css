@@ -1,8 +1,12 @@
-textarea {
-  width: 500px;
-  height: 400px;
+.delete-button {
+  width: 45px;
 }
 
-.input-500 {
-  width: 500px;
+textarea {
+  height: 40vh;
+}
+
+#generator-area {
+  background-color: #f8f8f8;
+  padding: 10px;
 }

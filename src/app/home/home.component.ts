@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LyricService } from '../services/lyric.service';
 import { LyricsStoreService } from '../services/lyrics-store.service';
 import { Song } from '../models/songs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -11,13 +12,16 @@ import { Song } from '../models/songs';
 })
 export class HomeComponent implements AfterViewInit {
 
-  constructor(private router: Router, private lyricService: LyricService, private lyricsStoreService: LyricsStoreService) { }
+  constructor(private router: Router, private lyricService: LyricService, private lyricsStoreService: LyricsStoreService, private toastr: ToastrService) { }
 
   title: string = '';
   lyrics: string = '';
 
   songName: string = '';
   songs: Song[] = [];
+
+  songsIsLoading: boolean = true;
+  songIsSaving: boolean = false;
 
   @ViewChild('myTextarea') myTextarea!: ElementRef;
 
@@ -33,8 +37,16 @@ export class HomeComponent implements AfterViewInit {
     return this.songs.filter(x => x.Title.toUpperCase().includes(this.songName.toUpperCase()))
   }
 
+  showSuccess() {
+    // this.toastr.success('Hello world!', 'Toastr fun!');
+  }
+
   getSongs() {
-    this.lyricsStoreService.getSongs().then(result => this.songs = result);
+    this.songsIsLoading = true;
+    this.lyricsStoreService.getSongs().then(result => {
+      this.songs = result;
+      this.songsIsLoading = false;
+    });
   }
 
   replace(song: Song) {
@@ -43,14 +55,20 @@ export class HomeComponent implements AfterViewInit {
   }
 
   async delete(song: Song) {
+    this.songsIsLoading = true;
     await this.lyricsStoreService.deleteSong(song);
     this.getSongs();
   }
 
   async save() {
+    if(this.isEmpty())
+      return;
+
+    this.songIsSaving = true;
     let song = new Song(this.title, this.lyrics);
     await this.lyricsStoreService.addSong(song);
     this.getSongs();
+    this.songIsSaving = false;
   }
 
   goToTheme(theme: number) {
@@ -61,6 +79,15 @@ export class HomeComponent implements AfterViewInit {
     }
 
     this.router.navigate(['theme', theme]);
+  }
+
+  clean() {
+    this.title = '';
+    this.lyrics = '';
+  }
+
+  isEmpty(): boolean {
+    return !this.title || !this.lyrics;
   }
 
   @HostListener('document:keydown', ['$event'])
